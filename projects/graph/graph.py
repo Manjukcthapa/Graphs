@@ -183,7 +183,7 @@ class Graph:
                     s.push(new_path)
    
 
-    def dfs_recursive(self, starting_vertex):
+    def dfs_recursive(self, starting_vertex, target_vertex, visited=None, path=None):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -191,15 +191,28 @@ class Graph:
 
         This should be done using recursion.
           """
-        # Base case...
-         # Create a Set to store visited verticies
-          # Create a list to store the path
-           # Add starting vertex to visited
-            # Add starting vertex to the path
-            # Check if starting vertex is the target
-            # Find neighbors of starting vertex
-             # If neighbor hasn't been visited...
-              # Recursively call function
+
+     # initiate visited
+        if visited is None:
+            visited = set()
+        # init path
+        visited.add(starting_vertex)
+        if path is None:
+            path = []
+        # add vertex to the path
+        path += [starting_vertex]
+        # if we are at the target value, return the path
+        if starting_vertex is target_vertex:
+            return path
+        # otherwise, call DFS_recursive on each unvisited neighbor
+        for neighbor in self.get_neighbors(starting_vertex):
+            if neighbor not in visited:
+                new_path = self.dfs_recursive(neighbor, target_vertex, visited, path)
+                if new_path is not None:
+                    return new_path
+        return None
+         
+
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
@@ -244,6 +257,7 @@ if __name__ == '__main__':
         1, 2, 4, 3, 7, 5, 6
     '''
     graph.bft(1)
+    print('------')
 
     '''
    Valid DFT paths:
@@ -253,9 +267,12 @@ if __name__ == '__main__':
         1, 2, 4, 6, 3, 5, 7
     '''
     graph.dft(1)
+    print('------')
 
     graph.dft_recursive(1)
+    print('-------------')
 
+    graph.dft_recursive(1)
     '''
     Valid BFS path:
         [1, 2, 4, 6]
@@ -268,4 +285,7 @@ if __name__ == '__main__':
         [1, 2, 4, 7, 6]
     '''
     print(graph.dfs(1, 6))
-    # print(graph.dfs_recursive(1, 6))
+    print(graph.dfs_recursive(1, 6))
+    print('-------------')
+    print(graph.dfs_recursive(1, 6))  
+
